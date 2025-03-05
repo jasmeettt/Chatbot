@@ -46,7 +46,7 @@ class MultiApp:
             
             typing_animation = """
             <h3 style="text-align: left;">
-            <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=30&Left=true&vLeft=true&width=250&height=80&lines=The Chatbot" alt="Typing Animation" />
+            <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=30&Left=true&vLeft=true&width=250&height=80&lines=QuickRail Chatbot" alt="Typing Animation" />
             </h3>
             """
             st.markdown(typing_animation, unsafe_allow_html=True)
