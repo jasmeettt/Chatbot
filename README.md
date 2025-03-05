@@ -14,43 +14,5 @@
 
 ---
 
-## Types of Chatbots
-
-### 1. Keyword-Based Chatbot
-
-| **Video**                                                                                                                     | **Description**                                                                                                                                               |
-|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Watch the video](https://img.youtube.com/vi/h28qpCRqQLE/maxresdefault.jpg)](https://www.youtube.com/watch?v=h28qpCRqQLE)     | Type a word from the list, and the chatbot will respond. For spelling errors or unlisted words, it replies with "not sure." It outputs only if a keyword matches.  |
-
----
-
-### 2. Rule-Based Chatbot
-
-| **Video**                                                                                                                     | **Description**                                                                                                                                               |
-|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Watch the video](https://img.youtube.com/vi/-xJIujQ03PY/maxresdefault.jpg)](https://www.youtube.com/watch?v=-xJIujQ03PY)   | **This chatbot follows a rule-based approach to guide users through ticket booking.** It provides predefined responses based on user inputs. It is structured, interactive.      |
-
----
-
-### 3. API-Based Chatbot
-
-| **Video**                                                                                                                     | **Description**                                                                                                                                               |
-|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Watch the video](https://img.youtube.com/vi/DWmSKp6zKag/maxresdefault.jpg)](https://www.youtube.com/watch?v=DWmSKp6zKag)   | This chatbot is powered by the Gemini API. This chatbot acts as a neurorehabilitation therapist and provides answers as a neurorehabilitation therapist no matter what question you ask. |
-
----
-
-### 4. MultiLingual Chatbot
-
-| **Video**                                                                                                                     | **Description**                                                                                                                                               |
-|-------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Watch the video](https://img.youtube.com/vi/-eRnjiKiwxc/maxresdefault.jpg)](https://www.youtube.com/watch?v=-eRnjiKiwxc)   | BharatBot, a multilingual chatbot supporting over 25 Indian languages. Ask a question in your preferred language, and it will respond in the language you choose. |
-
----
-
-Feel free to explore each type and experiment with different scenarios. Each chatbot is designed to demonstrate various approaches to building conversational agents.
-
----
-
 Stay tuned for more chatbot types coming soon!
 # Chatbot
