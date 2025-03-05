@@ -14,7 +14,7 @@ def app():
             font-size: 3em;
         }
         </style>
-        <div class="gradient-text">Welcome to The Chatbot</div>
+        <div class="gradient-text">Welcome to The Chatbot </div>
         """
 
     st.markdown(gradient_text_html, unsafe_allow_html=True)

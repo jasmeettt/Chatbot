@@ -3,7 +3,7 @@ import streamlit as st
 
 from streamlit_option_menu import option_menu
 
-st.set_page_config(layout="wide", page_title="Chatbot_Hub",page_icon="🤖",)
+st.set_page_config(layout="wide", page_title="Chatbot",page_icon="🤖",)
 
 import home , rule_based_chatbot as rule_based_chatbot
 
@@ -54,12 +54,12 @@ class MultiApp:
             
             app = option_menu(
                 menu_title='Sections',
-                options=['Home','Rule-Based Chatbot'],
+                options=['Home','Train Ticketing System'],
                 default_index=0,
             )
             
         if app == "Home":
             home.app()
-        elif app == "Rule-Based Chatbot":
+        elif app == "Train Ticketing System":
             rule_based_chatbot.app()
 MultiApp().run()

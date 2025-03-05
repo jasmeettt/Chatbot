@@ -13,7 +13,7 @@ def load_lottie_animation(file_path):
 animation1 = load_lottie_animation("assets/quic_rail.json")
 
 
-stations = ["Banglore", "Delhi", "Mumbai", "Chennai", "Hyderabad", "Kolkata"]
+stations = ["Banglore", "Delhi", "Mumbai", "Chennai", "Hyderabad", "Kolkata","Jaipur"]
 
 prices = {
     # Fares from Banglore to other city station
