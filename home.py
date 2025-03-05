@@ -14,7 +14,7 @@ def app():
             font-size: 3em;
         }
         </style>
-        <div class="gradient-text">Welcome to The Chatbot Hub</div>
+        <div class="gradient-text">Welcome to The Chatbot</div>
         """
 
     st.markdown(gradient_text_html, unsafe_allow_html=True)
@@ -38,13 +38,6 @@ def app():
     st.write("  - :orange[Libraries] like spaCy, Rasa, and Haystack empower developers to build bots that understand context and respond naturally.  \n   :orange[Frameworks] like LangChain and TensorFlow enable advanced AI-powered chatbots by chaining responses, maintaining context, and leveraging dynamic inputs.  \n :orange[Tools] like Hugging Face Transformers allow developers to fine-tune pre-trained models for domain-specific applications, making bots smarter and more versatile.")
     st.write("  - AI models such as OpenAI's GPT, Google's Gemini, Meta's LLaMA, and Anthropic's Claude offer  APIs that enable seamless integration.  \n These models have revolutionized chatbots by providing real-time services, driving widespread adoption, and  enhancing user engagement across various industries")
     
-    st.write('---')
-    col1,col2,col3 = st.columns([0.5,1,0.2])
-    with col2:
-        
-        linkedin_url = "https://www.linkedin.com/in/deekshith2912/"
-        linkedin_link = f"[Deekshith B]({linkedin_url})"
-        st.markdown(f"## Developed by {linkedin_link}")
 
     
     st.write('')

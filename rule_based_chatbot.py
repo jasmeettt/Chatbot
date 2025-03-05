@@ -108,7 +108,7 @@ def app():
                 st.session_state.messages.append({"content": "Hello! How many passengers are traveling? ", "is_user": False})
                 # Move to the next step
                 st.session_state.step = 1
-                st.experimental_rerun()
+                st.rerun()
 
         # Display previous messages from the chatbot and user
         for msg in st.session_state.messages:
@@ -125,7 +125,7 @@ def app():
             col1, col2 = st.columns([2, 1])  
             with col2:
                 # Dropdown to select the number of passengers (1-5)
-                user_input = st.selectbox("Number of passengers:", list(range(1, 6)))
+                user_input = st.selectbox("Number of passengers:", list(range(1, 11)))
                 if st.button("Submit"):
                     # Save the number of passengers to session state
                     st.session_state.num_passengers = user_input
@@ -134,7 +134,7 @@ def app():
                     # Prompt the user for the departure station
                     st.session_state.messages.append({"content": "Please select your departure station.", "is_user": False})
                     st.session_state.step = 2
-                    st.experimental_rerun()
+                    st.rerun()
 
         # Step 2: Ask for the departure station
         elif st.session_state.step == 2:
@@ -150,7 +150,7 @@ def app():
                     # Prompt the user for the destination station
                     st.session_state.messages.append({"content": "Please select your destination station.", "is_user": False})
                     st.session_state.step = 3
-                    st.experimental_rerun()
+                    st.rerun()
 
         # Step 3: Ask for the destination station
         elif st.session_state.step == 3:
@@ -172,7 +172,7 @@ def app():
                         # Add the price information to the chat history
                         st.session_state.messages.append({"content": f"Your total price for {st.session_state.num_passengers} passenger(s) from {st.session_state.from_station} to {st.session_state.to_station} is ₹{ticket_price}.", "is_user": False})
                         st.session_state.step = 4
-                        st.experimental_rerun()
+                        st.rerun()
 
         # Step 4: Display the payment option
         if st.session_state.step == 4:
@@ -183,7 +183,7 @@ def app():
                     st.image('payment.jpg')  # Example QR code image
                     time.sleep(40)
                     st.session_state.show_thank_you = True
-                    st.experimental_rerun()
+                    st.rerun()
 
         if st.session_state.show_thank_you:
             col1, col2 = st.columns([2, 1])  
@@ -197,7 +197,7 @@ def app():
                     st.session_state.to_station = None
                     st.session_state.start_time = None
                     st.session_state.show_thank_you = False  # Hide the Thank You button again
-                    st.experimental_rerun()
+                    st.rerun()
 
     with col22:
         with st.form('Question2'):
