@@ -22,6 +22,7 @@ prices = {
     ("Banglore", "Chennai"): 40,
     ("Banglore", "Hyderabad"): 25,
     ("Banglore", "Kolkata"): 35,
+    ("Banglore", "Jaipur"): 35,
     
     # Fares from Delhi to other city station
     ("Delhi", "Banglore"): 20,
@@ -29,6 +30,7 @@ prices = {
     ("Delhi", "Chennai"): 40,
     ("Delhi", "Hyderabad"): 25,
     ("Delhi", "Kolkata"): 35,
+    ("Delhi", "Jaipur"): 35,
 
     # Fares from Mumbai to other city station
     ("Mumbai", "Banglore"): 30,
@@ -36,6 +38,7 @@ prices = {
     ("Mumbai", "Chennai"): 40,
     ("Mumbai", "Hyderabad"): 25,
     ("Mumbai", "Kolkata"): 35,
+    ("Mumbai", "Jaipur"): 35,
 
     # Fares from Chennai to other city station
     ("Chennai", "Banglore"): 40,
@@ -43,6 +46,7 @@ prices = {
     ("Chennai", "Mumbai"): 40,
     ("Chennai", "Hyderabad"): 25,
     ("Chennai", "Kolkata"): 35,
+    ("Chennai", "Jaipur"): 35,
 
     # Fares from Hyderabad to other city station
     ("Hyderabad", "Banglore"): 25,
@@ -50,6 +54,7 @@ prices = {
     ("Hyderabad", "Mumbai"): 25,
     ("Hyderabad", "Chennai"): 25,
     ("Hyderabad", "Kolkata"): 35,
+    ("Hyderabad", "Jaipur"): 35,
 
     # Fares from Kolkata to other city station
     ("Kolkata", "Banglore"): 35,
@@ -57,6 +62,15 @@ prices = {
     ("Kolkata", "Mumbai"): 35,
     ("Kolkata", "Chennai"): 35,
     ("Kolkata", "Hyderabad"): 35,
+    ("Kolkata", "Jaipur"): 35,
+
+    # Fares form Jaipur to other city station
+    ("Jaipur", "Banglore"): 35,
+    ("Jaipur", "Delhi"): 35,
+    ("Jaipur", "Mumbai"): 35,
+    ("Jaipur", "Chennai"): 35,
+    ("Jaipur", "Hyderabad"): 35,
+    ("Jaipur", "Kolkata"): 35,
 }
 
 
@@ -205,9 +219,7 @@ def app():
             st.write("This chatbot follows a rule-based approach to guide users through ticket booking. It provides predefined responses based on user inputs. Errors like selecting the same departure and destination are flagged. The chatbot is structured, interactive, and calculates ticket prices dynamically.")
             if st.form_submit_button("Hope it helped"):
                 st.write("Feel free to customise and use it. Push any improvements to the repo!")
-                linkedin_url = "https://www.linkedin.com/in/deekshith2912/"
-                linkedin_link = f"[Deekshith B]({linkedin_url})"
-                st.markdown(f"###### Developed by {linkedin_link}")
+
 
         
 
