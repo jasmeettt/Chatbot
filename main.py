@@ -1,11 +1,14 @@
-
 import streamlit as st
 
+# ✅ Set page config at the very start
+st.set_page_config(layout="wide", page_title="Chatbot", page_icon="🤖")
+
 from streamlit_option_menu import option_menu
+import home
+import rule_based_chatbot as rule_based_chatbot
 
-st.set_page_config(layout="wide", page_title="Chatbot",page_icon="🤖",)
+# Rest of your MultiApp code...
 
-import home , rule_based_chatbot as rule_based_chatbot
 
 
 # Reducing whitespace on the top of the page
