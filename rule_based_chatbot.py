@@ -77,7 +77,7 @@ def app():
     
     # Step 0: Start booking process
     if st.session_state.step == 0:
-        if st.button("🚆 Book your Tickets Now", key="start_booking"):
+        if st.button("🎟️ Book your Tickets Now", key="start_booking"):
             st.session_state.messages.append({"content": "Hello! 👋 How many passengers are traveling?", "is_user": False})
             st.session_state.step = 1
             st.rerun()
