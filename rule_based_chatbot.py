@@ -1,31 +1,56 @@
 import streamlit as st
-import time
 import json
 from streamlit_lottie import st_lottie
 
 # ---------- Utility Functions ----------
 
 def load_lottie_animation(file_path):
-    with open(file_path, "r") as f:
-        return json.load(f)
+    """Load Lottie animations from a JSON file."""
+    try:
+        with open(file_path, "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None  # Avoid errors if the file is missing
 
+# Load animations
 animation1 = load_lottie_animation("assets/quic_rail.json")
+animation2 = load_lottie_animation("assets/payment_success.json")  # Success animation
 
-# Define modern icons for bot and user
-BOT_AVATAR = "🤖"
-USER_AVATAR = "👤"
-
-# Define stations and train details
+# Define available stations and train details
 stations = ["Bangalore", "Delhi", "Mumbai", "Chennai", "Hyderabad", "Kolkata", "Jaipur"]
+
 trains = {
-    ("Bangalore", "Delhi"): {"train": "Rajdhani Express", "number": "12431", "timing": "06:00 AM", "sleeper": 800, "ac": 2000},
-    ("Mumbai", "Chennai"): {"train": "Mumbai Mail", "number": "11027", "timing": "08:30 PM", "sleeper": 700, "ac": 1800},
-    ("Kolkata", "Hyderabad"): {"train": "Falaknuma Express", "number": "12704", "timing": "04:45 PM", "sleeper": 750, "ac": 1900},
+    ("Bangalore", "Delhi"): {
+        "train": "Rajdhani Express", "number": "12431", "timing": "06:00 AM",
+        "sleeper": 800, "ac": 2000, "duration": "36h", "stops": ["Nagpur", "Bhopal", "Agra"],
+        "coaches": 20
+    },
+    ("Mumbai", "Chennai"): {
+        "train": "Mumbai Mail", "number": "11027", "timing": "08:30 PM",
+        "sleeper": 700, "ac": 1800, "duration": "24h", "stops": ["Pune", "Solapur", "Vellore"],
+        "coaches": 18
+    },
+    ("Kolkata", "Hyderabad"): {
+        "train": "Falaknuma Express", "number": "12704", "timing": "04:45 PM",
+        "sleeper": 750, "ac": 1900, "duration": "26h", "stops": ["Bhubaneswar", "Vijayawada"],
+        "coaches": 22
+    },
+    ("Delhi", "Chennai"): {
+        "train": "Tamil Nadu Express", "number": "12622", "timing": "06:30 PM",
+        "sleeper": 1000, "ac": 2500, "duration": "32h", "stops": ["Nagpur", "Bhopal", "Vijayawada"],
+        "coaches": 24
+    },
+    ("Bangalore", "Hyderabad"): {
+        "train": "Kacheguda Express", "number": "12786", "timing": "10:00 PM",
+        "sleeper": 600, "ac": 1500, "duration": "10h", "stops": ["Guntakal", "Kurnool"],
+        "coaches": 16
+    }
 }
 
 # ---------- Session State Initialization ----------
 
 def init_state():
+    """Initialize session state variables for chatbot flow."""
     if "step" not in st.session_state:
         st.session_state.step = 0
     if "messages" not in st.session_state:
@@ -36,21 +61,22 @@ def init_state():
         st.session_state.from_station = None
     if "to_station" not in st.session_state:
         st.session_state.to_station = None
-    if "show_qr" not in st.session_state:
-        st.session_state.show_qr = False
+    if "show_payment" not in st.session_state:
+        st.session_state.show_payment = False
     if "show_thank_you" not in st.session_state:
         st.session_state.show_thank_you = False
     if "selected_class" not in st.session_state:
         st.session_state.selected_class = None
 
 def reset_booking():
+    """Reset the chatbot flow and session state."""
     st.session_state.step = 0
     st.session_state.messages = []
     st.session_state.num_passengers = None
     st.session_state.from_station = None
     st.session_state.to_station = None
     st.session_state.selected_class = None
-    st.session_state.show_qr = False
+    st.session_state.show_payment = False
     st.session_state.show_thank_you = False
 
 # ---------- Main App Function ----------
@@ -58,117 +84,100 @@ def reset_booking():
 def app():
     init_state()
     
+    # App title and animation
     st.title("🚆 QuickRail - Train Ticket Booking Chatbot")
     st_lottie(animation1, height=210, key="animation1")
     
-    # If payment is done, show a Thank You message & button to reset the flow.
+    # If payment is done, show a Thank You message & reset button.
     if st.session_state.show_thank_you:
-        st.success("\U0001f39f️ Your tickets have been booked successfully! Have a safe journey! ✨")
-        if st.button("🎉 Thank You", key="thank_you"):
+        st.success("🎉 Your tickets have been booked successfully! Have a safe journey! ✨")
+        st.balloons()
+        if animation2:
+            st_lottie(animation2, height=200, key="success_animation")
+        if st.button("🏠 Back to Home"):
             reset_booking()
             st.rerun()
         return
-    
-    # Display chat messages
+
+    # Display chat messages side by side
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
-            st.chat_message("assistant" if not msg["is_user"] else "user").markdown(msg["content"])
-    
+            col1, col2 = st.columns([1, 1])
+            if msg["is_user"]:
+                with col2:
+                    st.info(f"👤 {msg['content']}")
+            else:
+                with col1:
+                    st.success(f"🤖 {msg['content']}")
+
     # Step 0: Start booking process
     if st.session_state.step == 0:
-        if st.button("🎟️ Book your Tickets Now", key="start_booking"):
+        if st.button("🎟️ Book your Tickets Now"):
             st.session_state.messages.append({"content": "Hello! 👋 How many passengers are traveling?", "is_user": False})
             st.session_state.step = 1
             st.rerun()
-    
+
     # Step 1: Number of passengers
-    if st.session_state.step == 1:
-        num = st.selectbox("👥 Number of passengers:", list(range(1, 11)), key="passenger_select")
-        if st.button("✅ Submit", key="passenger_submit"):
+    elif st.session_state.step == 1:
+        num = st.selectbox("👥 Number of passengers:", list(range(1, 11)))
+        if st.button("✅ Submit"):
             st.session_state.num_passengers = num
             st.session_state.messages.append({"content": str(num), "is_user": True})
-            st.session_state.messages.append({"content": "📍 Please select your departure station.", "is_user": False})
+            st.session_state.messages.append({"content": "🚉 Please select your departure station.", "is_user": False})
             st.session_state.step = 2
             st.rerun()
-    
+
     # Step 2: Departure station
     elif st.session_state.step == 2:
-        dep = st.selectbox("🚉 Departure station:", stations, key="departure_select")
-        if st.button("✅ Submit", key="departure_submit"):
+        dep = st.selectbox("🚉 Departure station:", stations)
+        if st.button("✅ Submit"):
             st.session_state.from_station = dep
             st.session_state.messages.append({"content": dep, "is_user": True})
             st.session_state.messages.append({"content": "🎯 Please select your destination station.", "is_user": False})
             st.session_state.step = 3
             st.rerun()
-    
+
     # Step 3: Destination station
     elif st.session_state.step == 3:
-        dest = st.selectbox("🎯 Destination station:", stations, key="destination_select")
+        dest = st.selectbox("🎯 Destination station:", stations)
         if dest == st.session_state.from_station:
             st.error("❌ Departure and destination stations cannot be the same!")
         else:
-            if st.button("✅ Submit", key="destination_submit"):
+            if st.button("✅ Submit"):
                 st.session_state.to_station = dest
                 st.session_state.messages.append({"content": dest, "is_user": True})
                 st.session_state.messages.append({"content": "🛏️ Select your class: Sleeper or AC", "is_user": False})
                 st.session_state.step = 4
                 st.rerun()
-    
+
     # Step 4: Select Class
     elif st.session_state.step == 4:
-        train_info = trains.get((st.session_state.from_station, st.session_state.to_station), None)
+        train_info = trains.get((st.session_state.from_station, st.session_state.to_station))
         if train_info:
-            selected_class = st.radio("🎟️ Choose Class:", ("Sleeper", "AC"), key="class_select")
-            if st.button("✅ Submit", key="class_submit"):
-                st.session_state.selected_class = selected_class
-                price = train_info["sleeper"] if selected_class == "Sleeper" else train_info["ac"]
+            selected_class = st.radio("🎟️ Choose Class:", ("Sleeper", "AC"))
+            if st.button("✅ Submit"):
+                price = train_info[selected_class.lower()]
                 total_price = st.session_state.num_passengers * price
-                st.session_state.messages.append({"content": f"💰 Your total price is ₹{total_price} for {selected_class} class on {train_info['train']} ({train_info['number']}) at {train_info['timing']}", "is_user": False})
+                st.session_state.messages.append({
+                    "content": f"🚆 **{train_info['train']}** ({train_info['number']})\n"
+                               f"⏳ **Duration:** {train_info['duration']}\n"
+                               f"🛑 **Stops:** {', '.join(train_info['stops'])}\n"
+                               f"💺 **Coaches:** {train_info['coaches']}\n"
+                               f"💰 **Total Price:** ₹{total_price}",
+                    "is_user": False
+                })
+                st.session_state.messages.append({"content": "📲 Proceed to payment?", "is_user": False})
                 st.session_state.step = 5
                 st.rerun()
 
-# Step 5: Payment with QR overlay
+    # Step 5: Payment Page
     elif st.session_state.step == 5:
-        if st.button("💳 Make Payment", key="payment"):
-            st.session_state.show_qr = True
-            st.image("assets/payment.jpg")
+        st.image("assets/payment.jpg", caption="📸 Scan this QR code to complete your payment", width=300)
+        if st.button("✅ Confirm Payment"):
+            st.session_state.show_thank_you = True
             st.rerun()
-    
-    # Show QR code overlay when payment is clicked
-    if st.session_state.show_qr:
-        st.markdown(
-            """
-            <style>
-            .overlay {
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.6);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 1000;
-            }
-            .modal {
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                text-align: center;
-            }
-            </style>
-            <div class='overlay'>
-                <div class='modal'>
-                    <h3>Scan QR to Pay</h3>
-                    <img src='assets/payment.jpg' width='250'>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        time.sleep(3)
-        st.session_state.show_qr = False
-        st.session_state.show_thank_you = True
-        st.rerun()
+
+# Run the app
 if __name__ == "__main__":
     app()
