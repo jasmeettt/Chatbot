@@ -1,6 +1,44 @@
 import streamlit as st
+import requests
 
+# Function to fetch train station details from RapidAPI
+def get_station_details(station_code):
+    url = "https://irctc1.p.rapidapi.com/api/v1/searchStation"
+    headers = {
+        "x-rapidapi-key": "4d0dc103a0mshe97cfb09b21c167p12b446jsn8b5b922e8340",  # Replace with your API key
+        "x-rapidapi-host": "irctc1.p.rapidapi.com"
+    }
+    querystring = {"query": station_code}
+
+    response = requests.get(url, headers=headers, params=querystring)
+
+    if response.status_code == 200:
+        return response.json()  # Return station details as JSON
+    else:
+        return {"error": "Unable to fetch station details"}
+
+# Chatbot Function
+def chatbot_response(user_input):
+    user_input = user_input.lower()
+
+    # If user asks for train station details
+    if user_input.startswith("station "):  # Example: "station BJU"
+        station_code = user_input.split()[-1]  # Extract station code
+        station_info = get_station_details(station_code)
+        return f"Train Station Details: {station_info}"
+
+    # Default chatbot responses
+    responses = {
+        "hi": "Hello! 👋 How can I assist you today?",
+        "bye": "Goodbye! Have a great day! 😊",
+        "what can you do": "I can chat with you, answer train queries, and keep you entertained! 🚆"
+    }
+
+    return responses.get(user_input, "I'm still learning! 😊")
+
+# Streamlit UI
 def app():
+    st.title("Indian Railways Chatbot 🚆")
     
     gradient_text_html = """
         <style>
@@ -18,30 +56,14 @@ def app():
         """
 
     st.markdown(gradient_text_html, unsafe_allow_html=True)
-    st.write('')
-    st.write(
-    "Discover the fascinating world of conversational AI with our :orange[Chatbot Hub, a unique compilation featuring over 10 types of chatbots].  \n"
-    "This project showcases diverse chatbot designs, from rule-based systems to advanced AI-powered models, each tailored for different applications.  \n"
-    "Explore, interact, and learn how these virtual assistants enhance communication, streamline processes, and redefine user experiences across industries."
-    )
-
-    st.markdown(" #### Introduction to  Chatbots")
-    st.write(" -  A chatbot is a computer program that mimics human conversation, allowing people to interact with digital systems through text or voice.  \n -   It can answer questions, provide information, or help complete tasks, making communication with technology easier and more natural.  \n -  Chatbots are widely used in industries like customer support, healthcare, and education to streamline processes and improve user engagement.")
-
-
-    st.markdown(" #### A Brief History of Chatbots")
-    st.write("  - The first chatbot, :orange[ELIZA, was developed in the 1960s by Joseph Weizenbaum].  \n -  ELIZA used basic pattern matching techniques to simulate a conversation, but it could only respond to specific inputs.  \n  -  1970s-1990s: Chatbots continued to develop, with bots like :orange[PARRY (a simulation of a person with paranoid schizophrenia) and ALICE],   \n  which used pattern recognition and could hold more complex conversations.")
     
+    st.markdown("#### 🤖 Chat with the Bot")
+    user_input = st.text_input("💬 Type your message here:", key="user_input")
 
-    st.markdown("#### Recent Developments")
-    st.write("  - Chatbots evolved from basic rules-based systems to more sophisticated AI-powered bots.  \n  This was driven by advancements in :orange[Natural Language Processing (NLP) and machine learning], making bots more conversational and adaptable.")
-    st.write("  - :orange[Libraries] like spaCy, Rasa, and Haystack empower developers to build bots that understand context and respond naturally.  \n   :orange[Frameworks] like LangChain and TensorFlow enable advanced AI-powered chatbots by chaining responses, maintaining context, and leveraging dynamic inputs.  \n :orange[Tools] like Hugging Face Transformers allow developers to fine-tune pre-trained models for domain-specific applications, making bots smarter and more versatile.")
-    st.write("  - AI models such as OpenAI's GPT, Google's Gemini, Meta's LLaMA, and Anthropic's Claude offer  APIs that enable seamless integration.  \n These models have revolutionized chatbots by providing real-time services, driving widespread adoption, and  enhancing user engagement across various industries")
-    
+    if user_input:
+        bot_reply = chatbot_response(user_input)
+        st.write(f"🤖 **Bot:** {bot_reply}")
+        st.rerun()  # Clears the input field after response
 
-    
-    st.write('')
-    st.write('')
-    st.write('')
-    st.write('')
-    
+if __name__ == "__main__":
+    app()
