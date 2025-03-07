@@ -29,14 +29,10 @@ trains = {
     ("Kolkata", "Hyderabad"): {"train": "Falaknuma Express", "number": "12704", "timing": "04:45 PM", "sleeper": 750, "ac": 1900},
     ("Chennai", "Jaipur"): {"train": "Marudhar Express", "number": "14854", "timing": "07:15 AM", "sleeper": 900, "ac": 2100},
     ("Delhi", "Mumbai"): {"train": "Golden Temple Mail", "number": "12904", "timing": "09:30 PM", "sleeper": 850, "ac": 2050},
-
-    # ✅ New Routes Added Below:
     ("Pune", "Ahmedabad"): {"train": "Shatabdi Express", "number": "12009", "timing": "05:30 AM", "sleeper": 750, "ac": 1900},
     ("Lucknow", "Delhi"): {"train": "Gomti Express", "number": "12419", "timing": "07:00 AM", "sleeper": 600, "ac": 1600},
     ("Hyderabad", "Bangalore"): {"train": "Kacheguda Express", "number": "17603", "timing": "06:45 PM", "sleeper": 850, "ac": 2000},
     ("Ahmedabad", "Jaipur"): {"train": "Ashram Express", "number": "12915", "timing": "09:45 PM", "sleeper": 900, "ac": 2200},
-
-    # 🔥 Even More Routes:
     ("Patna", "Delhi"): {"train": "Vaishali Express", "number": "12553", "timing": "05:50 PM", "sleeper": 700, "ac": 1850},
     ("Bhopal", "Mumbai"): {"train": "Punjab Mail", "number": "12138", "timing": "10:15 AM", "sleeper": 800, "ac": 1950},
     ("Goa", "Mumbai"): {"train": "Konkan Kanya Express", "number": "10111", "timing": "06:00 PM", "sleeper": 850, "ac": 2050},
@@ -45,6 +41,8 @@ trains = {
     ("Delhi", "Bangalore"): {"train": "Karnataka Express", "number": "12628", "timing": "08:20 PM", "sleeper": 900, "ac": 2200},
     ("Chennai", "Kolkata"): {"train": "Coromandel Express", "number": "12841", "timing": "02:50 PM", "sleeper": 950, "ac": 2300},
     ("Hyderabad", "Pune"): {"train": "Shatabdi Express", "number": "12026", "timing": "06:15 AM", "sleeper": 800, "ac": 1900},
+    ("Pune", "Mumbai"): {"train": "Deccan Express", "number": "11238", "timing": "03:30 PM", "sleeper": 800, "ac": 1900},
+
 }
 
 
