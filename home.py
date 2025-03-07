@@ -1,5 +1,6 @@
 import streamlit as st
-import requests
+import http.client
+import json
 
 # RapidAPI Headers (Replace with your actual API key)
 HEADERS = {
@@ -24,20 +25,53 @@ def get_station_details(station_code):
             return f"⚠️ Error processing station data: {e}"
     return f"❌ API Error! Status Code: {response.status_code}"
 
-# Function to get train live status
+# Function to get train live status (using the new API)
 def get_train_status(train_number):
-    url = "https://irctc1.p.rapidapi.com/api/v1/liveTrainStatus"
-    response = requests.get(url, headers=HEADERS, params={"trainNo": train_number})
+    conn = http.client.HTTPSConnection("indian-railway-irctc.p.rapidapi.com")
+    
+    # Set the API headers
+    headers = {
+        'x-rapidapi-key': "4d0dc103a0mshe97cfb09b21c167p12b446jsn8b5b922e8340",
+        'x-rapidapi-host': "indian-railway-irctc.p.rapidapi.com",
+        'x-rapid-api': "rapid-api-database"
+    }
+    
+    # Make the GET request to fetch live train status
+    conn.request("GET", f"/api/trains/v1/train/status?train_number={train_number}&departure_date=20240623&isH5=true&client=web", headers=headers)
+    
+    res = conn.getresponse()
+    data = res.read()
+    
+    # Parse the response
+    response_data = json.loads(data.decode("utf-8"))
+    
+    # Check if the response is valid and contains train data
+    if response_data.get("status") == "success":
+        train_info = response_data.get("body", {}).get("trains", [])
+        
+        if not train_info:
+            return "❌ No train information found!"
 
-    if response.status_code == 200:
-        try:
-            data = response.json()
-            if "data" in data and data["data"]:
-                status = data["data"]
-                return f"🚆 **Train**: {status['train_name']} ({train_number})\n📍 **Current Status**: {status['position']}"
-        except Exception as e:
-            return f"⚠️ Error processing train data: {e}"
-    return "❌ No train status found or API error!"
+        train_details = train_info[0]  # Assuming the first train in the list is the one we need
+        
+        # Train details
+        train_name = train_details.get("trainName", "Unknown Train")
+        origin = train_details.get("origin", "Unknown Origin")
+        destination = train_details.get("destination", "Unknown Destination")
+        route_details = []
+        
+        for station in train_details.get("station", []):
+            station_name = station.get("stationName", "Unknown Station")
+            arrival_time = station.get("arrivalTime", "--")
+            departure_time = station.get("departureTime", "--")
+            route_details.append(f"📍 **Station**: {station_name} | Arrival: {arrival_time} | Departure: {departure_time}")
+        
+        route_info = "\n".join(route_details)
+        
+        return f"🚆 **Train**: {train_name} ({train_number})\n🌍 **From**: {origin} to {destination}\n\n{route_info}"
+    
+    else:
+        return "❌ Failed to fetch live train status."
 
 # Function to check PNR status
 def get_pnr_status(pnr_number):

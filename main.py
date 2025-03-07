@@ -4,11 +4,9 @@ st.set_page_config(layout="wide", page_title="QuickRail Chatbot", page_icon="ðŸš
 
 from streamlit_option_menu import option_menu
 import home
-import rule_based_chatbot  # âœ… Ensure the file exists in the same directory
+import rule_based_chatbot
 
 
-
-# Reducing whitespace on the top of the page
 st.markdown("""
 <style>
 .block-container {
