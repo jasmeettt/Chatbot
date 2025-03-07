@@ -3,7 +3,7 @@ import time
 import json
 from streamlit_lottie import st_lottie
 
-# ---------- Utility Functions ----------
+#  Utility Functions 
 
 def load_lottie_animation(file_path):
     """Load Lottie animations from a JSON file."""
@@ -46,7 +46,7 @@ trains = {
 }
 
 
-# ---------- Session State Initialization ----------
+# Session State Initialization 
 
 def init_state():
     """Initialize session state variables for chatbot flow."""
@@ -62,7 +62,7 @@ def reset_booking():
         st.session_state[key] = None
     st.session_state.messages = []
 
-# ---------- Main App Function ----------
+# Main App Function 
 
 def app():
     init_state()
@@ -85,7 +85,7 @@ def app():
             st.rerun()
         return
     
-    # Chat interface - Improved spacing for user & bot messages
+    # Chat interface
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
@@ -137,7 +137,7 @@ def app():
                 st.session_state.step = 4
                 st.rerun()
     
-    # Step 4: Select Class (Updated to use selectbox)
+    # Step 4: Select Class
     elif st.session_state.step == 4:
         train_info = trains.get((st.session_state.from_station, st.session_state.to_station), None)
         if train_info:
@@ -154,7 +154,7 @@ def app():
                 st.session_state.step = 5
                 st.rerun()
     
-    # Step 5: Payment Page (Realistic Payment Interface)
+    # Step 5: Payment Page
     elif st.session_state.step == 5:
         st.subheader("💳 Secure Payment Portal")
         payment_method = st.radio("Choose Payment Method:", ["Credit/Debit Card", "UPI", "Net Banking", "Wallet"])
