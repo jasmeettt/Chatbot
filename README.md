@@ -42,16 +42,7 @@ To run this project locally, follow these steps:
 2. **Install the dependencies**: Make sure you have pip installed, and then run:
 
     ```bash
-    pip install -r requirements.txt
-    ```
-
-   You may need to create a `requirements.txt` file that lists the following dependencies:
-
-    ```txt
-    streamlit
-    streamlit-option-menu
-    streamlit-lottie
-    requests
+    pip install streamlit streamlit-option-menu streamlit-lottie requests
     ```
 
 3. **Run the app**: After installing the dependencies, run the app using the command:
@@ -84,8 +75,8 @@ After confirming payment, the chatbot will show a success message and display a 
 ## Lottie Animations
 This project uses Lottie animations to provide a more engaging user experience. The animations are loaded via the `st_lottie` Streamlit component. You can find the JSON files for these animations in the `assets/` directory.
 
+## Inspiration
+This project was inspired by [Deekshith B](https://www.youtube.com/channel/UCg0r6zCTkX5R5ikU9T-PwDg), whose YouTube video on building a train booking chatbot provided the foundation. I made several changes and improvements based on my requirements.
+
 ## Contributing
 If you have any suggestions, improvements, or bugs to report, feel free to fork the repository and submit a pull request. Contributions are always welcome!
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
