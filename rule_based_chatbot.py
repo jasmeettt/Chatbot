@@ -1,178 +1,138 @@
 import streamlit as st
 import time
 import json
+import requests
 from streamlit_lottie import st_lottie
 
-#  Utility Functions 
+# API Base URL
+API_BASE_URL = "http://127.0.0.1:5001"
 
+# Load animations
 def load_lottie_animation(file_path):
-    """Load Lottie animations from a JSON file."""
     try:
         with open(file_path, "r") as f:
             return json.load(f)
     except FileNotFoundError:
-        return None  # Avoid errors if the file is missing
+        return None
 
-# Load animations
 animation1 = load_lottie_animation("assets/quic_rail.json")
-animation2 = load_lottie_animation("assets/payment_success.json")  # Success animation
+animation2 = load_lottie_animation("assets/payment_success.json")
 
-stations = [
-    "Bangalore", "Delhi", "Mumbai", "Chennai", "Hyderabad", "Kolkata", "Jaipur", 
-    "Pune", "Ahmedabad", "Lucknow", "Patna", "Bhopal", "Indore", "Goa", "Surat"
-]
-
-trains = {
-    # Existing Routes
-    ("Bangalore", "Delhi"): {"train": "Rajdhani Express", "number": "12431", "timing": "06:00 AM", "sleeper": 800, "ac": 2000},
-    ("Mumbai", "Chennai"): {"train": "Mumbai Mail", "number": "11027", "timing": "08:30 PM", "sleeper": 700, "ac": 1800},
-    ("Kolkata", "Hyderabad"): {"train": "Falaknuma Express", "number": "12704", "timing": "04:45 PM", "sleeper": 750, "ac": 1900},
-    ("Chennai", "Jaipur"): {"train": "Marudhar Express", "number": "14854", "timing": "07:15 AM", "sleeper": 900, "ac": 2100},
-    ("Delhi", "Mumbai"): {"train": "Golden Temple Mail", "number": "12904", "timing": "09:30 PM", "sleeper": 850, "ac": 2050},
-    ("Pune", "Ahmedabad"): {"train": "Shatabdi Express", "number": "12009", "timing": "05:30 AM", "sleeper": 750, "ac": 1900},
-    ("Lucknow", "Delhi"): {"train": "Gomti Express", "number": "12419", "timing": "07:00 AM", "sleeper": 600, "ac": 1600},
-    ("Hyderabad", "Bangalore"): {"train": "Kacheguda Express", "number": "17603", "timing": "06:45 PM", "sleeper": 850, "ac": 2000},
-    ("Ahmedabad", "Jaipur"): {"train": "Ashram Express", "number": "12915", "timing": "09:45 PM", "sleeper": 900, "ac": 2200},
-    ("Patna", "Delhi"): {"train": "Vaishali Express", "number": "12553", "timing": "05:50 PM", "sleeper": 700, "ac": 1850},
-    ("Bhopal", "Mumbai"): {"train": "Punjab Mail", "number": "12138", "timing": "10:15 AM", "sleeper": 800, "ac": 1950},
-    ("Goa", "Mumbai"): {"train": "Konkan Kanya Express", "number": "10111", "timing": "06:00 PM", "sleeper": 850, "ac": 2050},
-    ("Surat", "Ahmedabad"): {"train": "Intercity Express", "number": "22953", "timing": "07:15 AM", "sleeper": 500, "ac": 1400},
-    ("Indore", "Jaipur"): {"train": "Indore-Jaipur Express", "number": "12973", "timing": "11:30 AM", "sleeper": 750, "ac": 1800},
-    ("Delhi", "Bangalore"): {"train": "Karnataka Express", "number": "12628", "timing": "08:20 PM", "sleeper": 900, "ac": 2200},
-    ("Chennai", "Kolkata"): {"train": "Coromandel Express", "number": "12841", "timing": "02:50 PM", "sleeper": 950, "ac": 2300},
-    ("Hyderabad", "Pune"): {"train": "Shatabdi Express", "number": "12026", "timing": "06:15 AM", "sleeper": 800, "ac": 1900},
-    ("Pune", "Mumbai"): {"train": "Deccan Express", "number": "11238", "timing": "03:30 PM", "sleeper": 800, "ac": 1900},
-
-}
-
-
-# Session State Initialization 
-
+# Initialize session state
 def init_state():
-    """Initialize session state variables for chatbot flow."""
-    for key in ["step", "messages", "num_passengers", "from_station", "to_station", "show_payment", "show_thank_you", "selected_class"]:
+    for key in ["step", "messages", "num_passengers", "from_station", "to_station", "train", "class_type", "total_price", "show_payment", "show_thank_you", "payment_method"]:
         if key not in st.session_state:
             st.session_state[key] = None
     if st.session_state.messages is None:
         st.session_state.messages = []
 
 def reset_booking():
-    """Reset the chatbot flow and session state."""
-    for key in ["step", "messages", "num_passengers", "from_station", "to_station", "show_payment", "show_thank_you", "selected_class"]:
+    for key in ["step", "messages", "num_passengers", "from_station", "to_station", "train", "class_type", "total_price", "show_payment", "show_thank_you", "payment_method"]:
         st.session_state[key] = None
     st.session_state.messages = []
 
-# Main App Function 
+def fetch_train_status(train_number):
+    response = requests.get(f"{API_BASE_URL}/train_status/{train_number}")
+    if response.status_code == 200:
+        train_info = response.json().get("train_status", {})
+        if isinstance(train_info, dict):
+            return f"✅ **Train Name:** {train_info.get('name', 'Unknown')}\n✅ **Status:** {train_info.get('status', 'No info')}"
+    return "❌ No train status found!"
+
+def fetch_ticket_price(train_number, class_type, num_passengers):
+    params = {"train_number": train_number, "class": class_type}
+    response = requests.get(f"{API_BASE_URL}/train_fare", params=params)
+    if response.status_code == 200:
+        base_fare = response.json().get("train_fare", 0)
+        return base_fare * num_passengers
+    return 0
 
 def app():
     init_state()
-    
-    # App title and animation
     st.title("🚆 QuickRail - Train Ticket Booking Chatbot")
     st_lottie(animation1, height=210, key="animation1")
     
-    # If payment is done, show a Thank You message & reset button.
     if st.session_state.show_thank_you:
-        st.success("🎉 Your tickets have been booked successfully! Have a safe journey! ✨")
-        
-        st.balloons()
-        
+        st.success("🎉 Your ticket has been successfully booked! Safe travels! ✨")
         if animation2:
             st_lottie(animation2, height=200, key="success_animation")
-        
         if st.button("🏠 Back to Home"):
             reset_booking()
             st.rerun()
         return
     
-    # Chat interface
+    if st.session_state.show_payment:
+        st.subheader("💳 Secure Payment")
+        payment_method = st.radio("Select Payment Method:", ["Credit/Debit Card", "UPI", "Net Banking", "Wallet"])
+        
+        if payment_method == "Credit/Debit Card":
+            card_number = st.text_input("Card Number", max_chars=16)
+            expiry = st.text_input("Expiry Date (MM/YY)", max_chars=5)
+            cvv = st.text_input("CVV", max_chars=3, type="password")
+            card_name = st.text_input("Cardholder Name")
+        elif payment_method == "UPI":
+            upi_id = st.text_input("Enter UPI ID")
+        elif payment_method == "Net Banking":
+            bank = st.selectbox("Select Bank", ["HDFC Bank", "ICICI Bank", "SBI", "Axis Bank", "Other"])
+        elif payment_method == "Wallet":
+            wallet = st.selectbox("Select Wallet", ["Paytm", "Google Pay", "PhonePe", "Amazon Pay"])
+        
+        if st.button("💰 Pay ₹{}".format(st.session_state.total_price)):
+            time.sleep(1.5)
+            st.session_state.show_payment = False
+            st.session_state.show_thank_you = True
+            st.rerun()
+        return
+    
     chat_container = st.container()
     with chat_container:
         for msg in st.session_state.messages:
-            cols = st.columns([1, 3, 1])  # Adjusted for better spacing
             if msg["is_user"]:
-                with cols[2]:  # User messages on the right with more spacing
-                    st.markdown(f"👤 **You:** {msg['content']}")
+                st.markdown(f"👤 **You:** {msg['content']}")
             else:
-                with cols[0]:  # Bot messages on the left with better alignment
-                    st.markdown(f"🤖 **Bot:** {msg['content']}")
-
-    # Step 0: Start booking process
+                st.markdown(f"🤖 **Bot:** {msg['content']}")
+    
     if st.session_state.step is None:
-        if st.button("🎟️ Book your Tickets Now"):
-            st.session_state.messages.append({"content": "Hello! 👋 How many passengers are traveling?", "is_user": False})
+        if st.button("🎟️ Start Booking"):
+            st.session_state.messages.append({"content": "How many passengers are traveling?", "is_user": False})
             st.session_state.step = 1
             st.rerun()
     
-    # Step 1: Number of passengers
     elif st.session_state.step == 1:
-        num = st.selectbox("👥 Number of passengers:", list(range(1, 11)))
-        if st.button("✅ Submit"):
-            st.session_state.num_passengers = num
-            st.session_state.messages.append({"content": str(num), "is_user": True})
-            st.session_state.messages.append({"content": "🚉 Please select your departure station.", "is_user": False})
+        num = st.text_input("👥 Enter number of passengers:")
+        if st.button("Send") and num and num.isdigit():
+            st.session_state.num_passengers = int(num)
+            st.session_state.messages.append({"content": num, "is_user": True})
+            st.session_state.messages.append({"content": "Enter your train number.", "is_user": False})
             st.session_state.step = 2
             st.rerun()
     
-    # Step 2: Departure station
     elif st.session_state.step == 2:
-        dep = st.selectbox("🚉 Departure station:", stations)
-        if st.button("✅ Submit"):
-            st.session_state.from_station = dep
-            st.session_state.messages.append({"content": dep, "is_user": True})
-            st.session_state.messages.append({"content": "🎯 Please select your destination station.", "is_user": False})
+        train_number = st.text_input("🚆 Enter Train Number:")
+        if st.button("Send") and train_number:
+            st.session_state.train = train_number
+            train_status = fetch_train_status(train_number)
+            st.session_state.messages.append({"content": train_number, "is_user": True})
+            st.session_state.messages.append({"content": train_status, "is_user": False})
+            st.session_state.messages.append({"content": "Choose class: SL, 3A, 2A, or 1A", "is_user": False})
             st.session_state.step = 3
             st.rerun()
     
-    # Step 3: Destination station
     elif st.session_state.step == 3:
-        dest = st.selectbox("🎯 Destination station:", stations)
-        if dest == st.session_state.from_station:
-            st.error("❌ Departure and destination stations cannot be the same!")
-        else:
-            if st.button("✅ Submit"):
-                st.session_state.to_station = dest
-                st.session_state.messages.append({"content": dest, "is_user": True})
-                st.session_state.messages.append({"content": "🛏️ Select your class: Sleeper or AC", "is_user": False})
-                st.session_state.step = 4
-                st.rerun()
+        class_type = st.selectbox("Select Class:", ["SL", "3A", "2A", "1A"])
+        if st.button("Send"):
+            st.session_state.class_type = class_type
+            total_price = fetch_ticket_price(st.session_state.train, class_type, st.session_state.num_passengers)
+            st.session_state.total_price = total_price
+            st.session_state.messages.append({"content": f"Total Price: ₹{total_price}", "is_user": False})
+            st.session_state.messages.append({"content": "Proceed to payment?", "is_user": False})
+            st.session_state.step = 4
+            st.rerun()
     
-    # Step 4: Select Class
     elif st.session_state.step == 4:
-        train_info = trains.get((st.session_state.from_station, st.session_state.to_station), None)
-        if train_info:
-            selected_class = st.selectbox("🎟️ Choose Class:", ["Sleeper", "AC"])  # Changed to selectbox
-            if st.button("✅ Submit"):
-                st.session_state.selected_class = selected_class
-                price = train_info["sleeper"] if selected_class == "Sleeper" else train_info["ac"]
-                total_price = st.session_state.num_passengers * price
-                st.session_state.messages.append({
-                    "content": f"💰 Your total price is **₹{total_price}** for **{selected_class} class** on **{train_info['train']} ({train_info['number']})** at **{train_info['timing']}**",
-                    "is_user": False
-                })
-                st.session_state.messages.append({"content": "📲 Proceed to payment?", "is_user": False})
-                st.session_state.step = 5
-                st.rerun()
-    
-    # Step 5: Payment Page
-    elif st.session_state.step == 5:
-        st.subheader("💳 Secure Payment Portal")
-        payment_method = st.radio("Choose Payment Method:", ["Credit/Debit Card", "UPI", "Net Banking", "Wallet"])
-        if payment_method == "Credit/Debit Card":
-            st.text_input("Card Number", placeholder="1234 5678 9012 3456")
-            st.text_input("Expiry Date", placeholder="MM/YY")
-            st.text_input("CVV", placeholder="***", type="password")
-        elif payment_method == "UPI":
-            st.text_input("Enter UPI ID", placeholder="yourname@upi")
-        elif payment_method == "Net Banking":
-            st.selectbox("Select Bank", ["SBI", "HDFC", "ICICI", "Axis", "Kotak"])
-        elif payment_method == "Wallet":
-            st.selectbox("Select Wallet", ["Paytm", "PhonePe", "Google Pay"])
-        
-        if st.button("✅ Confirm Payment"):
-            st.session_state.show_thank_you = True
+        if st.button("💳 Proceed to Payment"):
+            st.session_state.show_payment = True
             st.rerun()
 
-# Run the app
 if __name__ == "__main__":
     app()
