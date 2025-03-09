@@ -7,16 +7,16 @@ API_URL = "http://127.0.0.1:5001"
 
 # Sidebar Navigation
 st.sidebar.title("🚆 QuickRail System")
-page = st.sidebar.radio("📌 Navigate to:", ["🏠 Home", "💬 Chatbot", "📍 Train Services"])
+page = st.sidebar.radio("📌 Navigate to:", ["🏠 Home", "🎟️ Book a Ticket", "📍 Train Services"])
 
 # Home Page
 if page == "🏠 Home":
     st.title("🚆 Welcome to QuickRail")
     st.markdown("### Your one-stop solution for train ticket booking & railway information.")
-    st.image("https://source.unsplash.com/1600x400/?train,railway", use_container_width=True)
+    st.image("/workspaces/Chatbot/assets/DALL·E 2025-03-09 03.43.10 - A modern, tech-inspired banner for QuickRail, a futuristic train ticket booking platform. The design features a sleek, high-speed train with glowing b.webp", use_container_width=True)
 
 # Chatbot Module
-elif page == "💬 Chatbot":
+elif page == "🎟️ Book a Ticket":
     chatbot_app()  # Run the chatbot module
 
 # Train Services
