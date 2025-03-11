@@ -1,82 +1,105 @@
-# QuickRail Chatbot
+# 🚆 QuickRail Chatbot  
 
-## Project Description
-QuickRail is an interactive train ticket booking system built using Streamlit. It allows users to book train tickets for different routes across India. The chatbot takes users through the booking process step-by-step, from selecting departure and destination stations to class preferences and payment. This app also provides real-time information about stations, train statuses, PNR status, and fare details.
+## **Project Description**  
+QuickRail is an interactive **train ticket booking system** built using **Streamlit**. It allows users to book train tickets for different routes across India. The chatbot takes users through the **step-by-step booking process**, from selecting departure and destination stations to class preferences and payment. The app also provides **real-time train-related information** such as station details, train statuses, PNR status, and fare details by fetching data from a **Flask API with a dataset**.  
 
-### Key Features:
-- **Train Ticket Booking**: Users can select their departure and destination stations, choose the class (Sleeper/AC), and proceed to make payments.
-- **Real-Time Information**: The app fetches live data on station details, train statuses, and PNR status using the IRCTC API.
-- **Payment Integration**: The system supports mock payment processing, where users can select their preferred payment method.
-- **Lottie Animations**: Beautiful animations enhance the user experience during the booking process.
+### **Key Features**  
+- **Train Ticket Booking**: Users can select their departure and destination stations, choose the class (Sleeper/AC), and proceed to make payments.  
+- **Real-Time Information**: The app fetches train-related data (station details, train status, PNR status, fare info) from a **Flask API** instead of external sources.  
+- **Payment Integration**: Supports mock payment processing, allowing users to select their preferred payment method.  
+- **Lottie Animations**: Beautiful animations enhance the user experience during the booking process.  
 
-## Tech Stack
-- **Frontend**: Streamlit, HTML, CSS, Lottie animations
-- **Backend**: Python
-- **APIs Used**: 
-  - IRCTC API for station details, live train status, and fare info
-  - RapidAPI for real-time information (train status, PNR status)
+---
 
-## Features
-### Step-by-Step Booking Process:
-1. Choose number of passengers.
-2. Select departure and destination stations.
-3. Choose the class (Sleeper/AC).
-4. Calculate fare and confirm payment.
+## **Tech Stack**  
+- **Frontend**: Streamlit, HTML, CSS, Lottie animations  
+- **Backend**: Python (Flask)  
+- **APIs Used**:  
+  - **Custom Flask API** for train details, station status, and fare information  
 
-### Real-Time Information:
-- Check station details by station code.
-- Check the live status of any train.
-- Get PNR status and track booking progress.
-- Fetch train fare details based on class and quota.
+---
 
-## Installation
-To run this project locally, follow these steps:
+## **Features**  
 
-1. **Clone the repository**:
+### **Step-by-Step Booking Process**  
+1. Choose the number of passengers.  
+2. Select **departure** and **destination** stations.  
+3. Choose a **class** (Sleeper/AC).  
+4. Calculate **fare** and confirm **payment**.  
 
+### **Real-Time Information**  
+- Check **station details** by station code.  
+- Check the **live status** of any train.  
+- Get **PNR status** and track booking progress.  
+- Fetch **train fare details** based on class and quota.  
+
+---
+
+## **Installation**  
+
+To run this project locally, follow these steps:  
+
+1. **Clone the repository**  
     ```bash
     git clone https://github.com/jasmeettt/Chatbot.git
     cd Chatbot
     ```
 
-2. **Install the dependencies**: Make sure you have pip installed, and then run:
-
+2. **Install dependencies**  
     ```bash
-    pip install streamlit streamlit-option-menu streamlit-lottie requests
+    pip install streamlit streamlit-option-menu streamlit-lottie requests flask pandas
     ```
 
-3. **Run the app**: After installing the dependencies, run the app using the command:
+3. **Run the Flask API**  
+    ```bash
+    python api.py
+    ```
+    ✅ Flask API runs on `http://127.0.0.1:5001`.  
 
+4. **Run the Streamlit app**  
     ```bash
     streamlit run app.py
     ```
 
-4. Open a web browser and visit `http://localhost:8501` to access the chatbot.
+5. Open a web browser and visit **`http://localhost:8501`** to access the chatbot.  
 
-## Usage
-### Start Booking Process:
-When you click "🎟️ Book your Tickets Now," the bot will ask you a series of questions:
-1. Number of passengers
-2. Departure station
-3. Destination station
-4. Choose the class (Sleeper/AC)
-5. Calculate the fare for your trip
-6. Proceed to payment
+---
 
-### Live Train Information:
-You can also use the sidebar to access real-time station, train, and PNR status by selecting the respective options.
+## **Usage**  
 
-### Payment Portal:
-When you're ready to confirm your booking, proceed to the payment section. Here, you can choose a payment method (Credit/Debit Card, UPI, Wallet, etc.).
+### **🎟️ Start Booking Process**  
+When you click **"🎟️ Book your Tickets Now,"** the chatbot will guide you through:  
+✔ Number of passengers  
+✔ Departure station  
+✔ Destination station  
+✔ Choose class (**Sleeper/AC**)  
+✔ Calculate **fare**  
+✔ Proceed to **payment**  
 
-### Thank You Page:
-After confirming payment, the chatbot will show a success message and display a thank-you animation.
+### **📡 Live Train Information**  
+You can also use the **sidebar** to access:  
+- **Station details**  
+- **Live train status**  
+- **PNR status tracking**  
+- **Train fare details**  
 
-## Lottie Animations
-This project uses Lottie animations to provide a more engaging user experience. The animations are loaded via the `st_lottie` Streamlit component. You can find the JSON files for these animations in the `assets/` directory.
+### **💳 Payment Portal**  
+Confirm your booking and choose a **payment method** (**Credit/Debit Card, UPI, Wallet, etc.**).  
 
-## Inspiration
-This project was inspired by [Deekshith B](https://www.youtube.com/channel/UCg0r6zCTkX5R5ikU9T-PwDg), whose YouTube video on building a train booking chatbot provided the foundation. I made several changes and improvements based on my requirements.
+### **🎉 Thank You Page**  
+After payment, a **confirmation message & Lottie animation** will be displayed.  
 
-## Contributing
-If you have any suggestions, improvements, or bugs to report, feel free to fork the repository and submit a pull request. Contributions are always welcome!
+---
+
+## **🎨 Lottie Animations**  
+This project uses **Lottie animations** to enhance the user experience. The animations are loaded via the `st_lottie` Streamlit component. JSON files are located in the `assets/` directory.  
+
+---
+
+## **🔗 Inspiration**  
+This project was inspired by [Deekshith B](https://www.youtube.com/channel/UCg0r6zCTkX5R5ikU9T-PwDg), whose YouTube tutorial on a train booking chatbot provided the foundation. I improved the project by **developing a Flask API** instead of using external APIs.  
+
+---
+
+## **🤝 Contributing**  
+If you have any **suggestions, improvements, or bug reports**, feel free to **fork the repository** and submit a **pull request**. Contributions are always welcome! 🚀  
