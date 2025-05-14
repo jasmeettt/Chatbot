@@ -1,0 +1,4 @@
+flask
+streamlit
+streamlit_lottie
+fpdf

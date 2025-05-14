@@ -1,13 +1,14 @@
 import streamlit as st
 import requests
-from rule_based_chatbot import app as chatbot_app  # Import chatbot module
+from rule_based_chatbot import app as chatbot_app  # Import the main chatbot module
+from rule_based_chatbot import ticket_chatbot_app  # Import a new function for ticket-specific chatbot
 
 # API Base URL (Ensure `api.py` is running)
 API_URL = "http://127.0.0.1:5001"
 
 # Sidebar Navigation
 st.sidebar.title("🚆 QuickRail System")
-page = st.sidebar.radio("📌 Navigate to:", ["🏠 Home", "🎟️ Book a Ticket", "📍 Train Services"])
+page = st.sidebar.radio("📌 Navigate to:", ["🏠 Home", "🤖 Chatbot", "🎟️ Book a Ticket", "📍 Train Services"])
 
 # Home Page
 if page == "🏠 Home":
@@ -15,11 +16,30 @@ if page == "🏠 Home":
     st.markdown("### Your one-stop solution for train ticket booking & railway information.")
     st.image("/workspaces/Chatbot/assets/DALL·E 2025-03-09 03.43.10 - A modern, tech-inspired banner for QuickRail, a futuristic train ticket booking platform. The design features a sleek, high-speed train with glowing b.webp", use_container_width=True)
 
-# Chatbot Module
-elif page == "🎟️ Book a Ticket":
-    chatbot_app()  # Run the chatbot module
+# Chatbot Page (Now separate)
+elif page == "🤖 Chatbot":
+    st.title("💬 QuickRail Chatbot")
+    st.markdown("### Ask me anything about trains, stations, bookings, and more!")
+    # Only the chatbot should be active on this page
+    def chatbot_page():
+        chatbot_app()  # Use the chatbot module here for general queries
 
-# Train Services
+    chatbot_page()  # Run the chatbot for this page
+
+# Book a Ticket Page
+elif page == "🎟️ Book a Ticket":
+    st.subheader("🎟️ Book Your Train Ticket")
+    st.markdown("""
+    Interact with the chatbot below to assist you in booking a ticket. The chatbot will guide you through the necessary steps for booking your ticket.
+    """)
+    
+    # Use a different function (ticket-specific chatbot logic) for booking
+    def ticket_booking_chatbot_page():
+        ticket_chatbot_app()  # This function will be used for ticket-related queries
+
+    ticket_booking_chatbot_page()  # Run the ticket-specific chatbot for this page
+
+# Train Services Page
 elif page == "📍 Train Services":
     option = st.sidebar.radio("🔍 Select an option:", ["🏢 Station Details", "🚆 Train Live Status", "🆔 PNR Status", "💰 Train Fare"])
 
