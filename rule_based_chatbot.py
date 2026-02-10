@@ -33,10 +33,14 @@ def init_state():
         if key not in st.session_state:
             st.session_state[key] = default
 
-# Reset session state after booking
+# Reset session state after booking (only specific keys to preserve chat history if needed)
 def reset_booking():
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
+    booking_keys = ["step", "num_passengers", "from_station", "to_station", "train", "class_type", "total_price", "show_payment", "show_thank_you", "payment_method"]
+    for key in booking_keys:
+        if key in st.session_state:
+            st.session_state[key] = None
+    st.session_state.show_payment = False
+    st.session_state.show_thank_you = False
 
 # PDF ticket generation
 # PDF ticket generation
@@ -57,7 +61,7 @@ def generate_ticket_pdf():
     pdf.cell(200, 10, "Have a safe journey!", ln=True)
     pdf.cell(200, 10, f"Issue Date: {datetime.now().strftime('%d-%m-%Y %H:%M:%S')}", ln=True, align="R")
 
-    file_path = "/tmp/ticket.pdf"
+    file_path = "ticket.pdf"
     pdf.output(file_path)
 
     with open(file_path, "rb") as f:
@@ -86,20 +90,25 @@ def get_chatbot_response(user_input):
 
     if "pnr" in user_input and any(char.isdigit() for char in user_input):
         pnr_number = ''.join(filter(str.isdigit, user_input))
+        if len(pnr_number) != 10:
+            return "⚠️ PNR number must be exactly 10 digits."
+        
         response = requests.get(f"{API_BASE_URL}/pnr_status/{pnr_number}")
         if response.status_code == 200:
             data = response.json().get("pnr_status", {})
             if isinstance(data, dict):
                 return f"🎫 PNR Status: {data.get('status')}, Seat: {data.get('seat')}"
-        return "❌ Unable to fetch PNR status."
+        return f"❌ No details found for PNR {pnr_number}."
 
-    for code in ["ndls", "csmt", "mmct", "sbc", "mas", "bbs", "pune"]:
-        if code in user_input:
-            response = requests.get(f"{API_BASE_URL}/station/{code.upper()}")
+    # Dynamically handle station codes from a known list (synced with api.py)
+    popular_stations = ["NDLS", "MMCT", "HWH", "CSMT", "SBC", "MAS", "BBS", "PUNE", "JAT", "ADI", "TNA", "KYN", "PNVL", "DDR", "BVI", "VR", "BUD", "KJT", "LNL", "CCH"]
+    for code in popular_stations:
+        if code.lower() in user_input:
+            response = requests.get(f"{API_BASE_URL}/station/{code}")
             if response.status_code == 200:
                 data = response.json().get("station_details", {})
-                return f"🏙️ Station: {data.get('name')} ({data.get('code')})"
-            return "❌ Could not retrieve station information."
+                return f"🏙️ Station Found: {data.get('name')} ({data.get('code')})"
+            return f"❌ Could not retrieve details for station {code}."
 
     if "fare" in user_input:
         words = user_input.split()

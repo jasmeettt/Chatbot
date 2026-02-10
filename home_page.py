@@ -14,7 +14,7 @@ page = st.sidebar.radio("📌 Navigate to:", ["🏠 Home", "🤖 Chatbot", "🎟
 if page == "🏠 Home":
     st.title("🚆 Welcome to QuickRail")
     st.markdown("### Your one-stop solution for train ticket booking & railway information.")
-    st.image("/workspaces/Chatbot/assets/DALL·E 2025-03-09 03.43.10 - A modern, tech-inspired banner for QuickRail, a futuristic train ticket booking platform. The design features a sleek, high-speed train with glowing b.webp", use_container_width=True)
+    st.image("assets/DALL·E 2025-03-09 03.43.10 - A modern, tech-inspired banner for QuickRail, a futuristic train ticket booking platform. The design features a sleek, high-speed train with glowing b.webp", use_container_width=True)
 
 # Chatbot Page (Now separate)
 elif page == "🤖 Chatbot":
@@ -91,7 +91,7 @@ elif page == "📍 Train Services":
                     - **Station Code:** `{result['code']}`
                     """)
                 else:
-                    st.error("❌ No station found!")
+                    st.error("❌ Station not found! Please check the station code.")
 
     # 🚆 Train Live Status UI
     elif option == "🚆 Train Live Status":
@@ -107,7 +107,7 @@ elif page == "📍 Train Services":
                     - **Current Status:** `{result['status']}`
                     """)
                 else:
-                    st.error("❌ No train status found!")
+                    st.error(f"❌ No status found for train {train_number}!")
 
     # 🆔 PNR Status UI
     elif option == "🆔 PNR Status":

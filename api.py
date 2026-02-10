@@ -70,7 +70,10 @@ train_fares = {
 # ✅ Station Details Endpoint
 @app.route('/station/<station_code>', methods=['GET'])
 def get_station_details(station_code):
-    return jsonify({"station_details": stations.get(station_code.upper(), "❌ No station found!")})
+    station = stations.get(station_code.upper())
+    if station:
+        return jsonify({"station_details": station})
+    return jsonify({"error": f"Station '{station_code}' not found"}), 404
 
 # ✅ Train Live Status Endpoint
 @app.route('/train_status/<train_number>', methods=['GET'])
