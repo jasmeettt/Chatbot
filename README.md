@@ -1,105 +1,137 @@
-# 🚆 QuickRail Chatbot  
+# 🚆 QuickRail Chatbot
 
-## **Project Description**  
-QuickRail is an interactive **train ticket booking system** built using **Streamlit**. It allows users to book train tickets for different routes across India. The chatbot takes users through the **step-by-step booking process**, from selecting departure and destination stations to class preferences and payment. The app also provides **real-time train-related information** such as station details, train statuses, PNR status, and fare details by fetching data from a **Flask API with a dataset**.  
-
-### **Key Features**  
-- **Train Ticket Booking**: Users can select their departure and destination stations, choose the class (Sleeper/AC), and proceed to make payments.  
-- **Real-Time Information**: The app fetches train-related data (station details, train status, PNR status, fare info) from a **Flask API** instead of external sources.  
-- **Payment Integration**: Supports mock payment processing, allowing users to select their preferred payment method.  
-- **Lottie Animations**: Beautiful animations enhance the user experience during the booking process.  
+An interactive **train ticket booking and information system** built with **Streamlit** and powered by a **Flask API**. QuickRail guides users through ticket booking, provides train status, PNR lookups, station info, and fare details — all through a conversational chatbot interface.
 
 ---
 
-## **Tech Stack**  
-- **Frontend**: Streamlit, HTML, CSS, Lottie animations  
-- **Backend**: Python (Flask)  
-- **APIs Used**:  
-  - **Custom Flask API** for train details, station status, and fare information  
+## ✨ Features
+
+### 🎟️ Train Ticket Booking
+- Step-by-step guided booking via chatbot
+- Choose number of passengers, train, and class (SL / 3A / 2A / 1A)
+- Mock payment with multiple methods (Card, UPI, Net Banking, Wallet)
+- **Downloadable PDF ticket** after successful payment
+
+### 🤖 General Chatbot
+- Ask about train status, PNR, station info, or fares using natural language
+- Input validation (e.g., PNR must be 10 digits)
+- Helpful fallback messages for unrecognized queries
+
+### 📍 Train Services Dashboard
+- **Station Details** — Look up any station by code
+- **Train Live Status** — Check if a train is on time or delayed
+- **PNR Status** — Get booking confirmation and seat details
+- **Train Fare** — Compare fares across classes and quotas
+
+### 🎨 UI Enhancements
+- Lottie animations for booking and payment success
+- Loading spinners on all API-dependent actions
+- Clean sidebar navigation
 
 ---
 
-## **Features**  
+## 🛠️ Tech Stack
 
-### **Step-by-Step Booking Process**  
-1. Choose the number of passengers.  
-2. Select **departure** and **destination** stations.  
-3. Choose a **class** (Sleeper/AC).  
-4. Calculate **fare** and confirm **payment**.  
-
-### **Real-Time Information**  
-- Check **station details** by station code.  
-- Check the **live status** of any train.  
-- Get **PNR status** and track booking progress.  
-- Fetch **train fare details** based on class and quota.  
+| Layer | Technology |
+|:------|:-----------|
+| Frontend | Streamlit, Lottie Animations |
+| Backend API | Python Flask |
+| PDF Generation | FPDF |
+| Data | In-memory dictionaries (no database needed) |
 
 ---
 
-## **Installation**  
+## 🚀 How to Run
 
-To run this project locally, follow these steps:  
+### Prerequisites
+- **Python 3.10+** installed
+- **pip** available in your PATH
 
-1. **Clone the repository**  
-    ```bash
-    git clone https://github.com/jasmeettt/Chatbot.git
-    cd Chatbot
-    ```
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/jasmeettt/Chatbot.git
+cd Chatbot
+```
 
-2. **Install dependencies**  
-    ```bash
-    pip install streamlit streamlit-option-menu streamlit-lottie requests flask pandas
-    ```
+### Step 2: Create a Virtual Environment
+```bash
+python -m venv venv
+```
 
-3. **Run the Flask API**  
-    ```bash
-    python api.py
-    ```
-    ✅ Flask API runs on `http://127.0.0.1:5001`.  
+### Step 3: Activate the Virtual Environment
 
-4. **Run the Streamlit app**  
-    ```bash
-    streamlit run app.py
-    ```
+**Windows (PowerShell):**
+```powershell
+.\venv\Scripts\activate
+```
 
-5. Open a web browser and visit **`http://localhost:8501`** to access the chatbot.  
+**macOS / Linux:**
+```bash
+source venv/bin/activate
+```
 
----
+### Step 4: Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-## **Usage**  
+### Step 5: Start the Flask API (Terminal 1)
+```bash
+python api.py
+```
+> The API will start on `http://127.0.0.1:5001`
 
-### **🎟️ Start Booking Process**  
-When you click **"🎟️ Book your Tickets Now,"** the chatbot will guide you through:  
-✔ Number of passengers  
-✔ Departure station  
-✔ Destination station  
-✔ Choose class (**Sleeper/AC**)  
-✔ Calculate **fare**  
-✔ Proceed to **payment**  
-
-### **📡 Live Train Information**  
-You can also use the **sidebar** to access:  
-- **Station details**  
-- **Live train status**  
-- **PNR status tracking**  
-- **Train fare details**  
-
-### **💳 Payment Portal**  
-Confirm your booking and choose a **payment method** (**Credit/Debit Card, UPI, Wallet, etc.**).  
-
-### **🎉 Thank You Page**  
-After payment, a **confirmation message & Lottie animation** will be displayed.  
+### Step 6: Start the Streamlit App (Terminal 2)
+```bash
+streamlit run home_page.py
+```
+> The app will open at `http://localhost:8501`
 
 ---
 
-## **🎨 Lottie Animations**  
-This project uses **Lottie animations** to enhance the user experience. The animations are loaded via the `st_lottie` Streamlit component. JSON files are located in the `assets/` directory.  
+## 📁 Project Structure
+
+```
+Chatbot/
+├── api.py                  # Flask API with train, station, PNR & fare data
+├── home_page.py            # Streamlit UI — main entry point
+├── rule_based_chatbot.py   # Chatbot logic, booking flow, PDF generation
+├── requirements.txt        # Python dependencies
+├── .gitignore              # Excludes venv, cache, generated files
+├── assets/
+│   ├── quic_rail.json      # Lottie animation for booking page
+│   ├── payment_success.json# Lottie animation for payment confirmation
+│   └── *.webp              # Banner image for home page
+└── README.md
+```
 
 ---
 
-## **🔗 Inspiration**  
-This project was inspired by [Deekshith B](https://www.youtube.com/channel/UCg0r6zCTkX5R5ikU9T-PwDg), whose YouTube tutorial on a train booking chatbot provided the foundation. I improved the project by **developing a Flask API** instead of using external APIs.  
+## 📡 API Endpoints
+
+| Endpoint | Method | Description |
+|:---------|:-------|:------------|
+| `/` | GET | Welcome message |
+| `/station/<code>` | GET | Get station details by code (e.g., NDLS, CSMT) |
+| `/train_status/<number>` | GET | Get live status of a train |
+| `/pnr_status/<pnr>` | GET | Get PNR booking status |
+| `/train_fare?train_number=&class=` | GET | Get fare for a train and class |
 
 ---
 
-## **🤝 Contributing**  
-If you have any **suggestions, improvements, or bug reports**, feel free to **fork the repository** and submit a **pull request**. Contributions are always welcome! 🚀  
+## 🧪 Sample Data
+
+The API uses in-memory data. Here are some values you can test with:
+
+| Type | Sample Values |
+|:-----|:-------------|
+| **Station Codes** | NDLS, CSMT, MMCT, PUNE, SBC, MAS, TNA, KYN, PNVL |
+| **Train Numbers** | 12431, 11027, 12625, 12951, 22120 |
+| **PNR Numbers** | 1234567890, 9876543210, 5678901234 |
+
+---
+
+## 🤝 Contributing
+
+Suggestions, improvements, and bug reports are welcome!  
+Fork the repo, make your changes, and submit a pull request. 🚀
